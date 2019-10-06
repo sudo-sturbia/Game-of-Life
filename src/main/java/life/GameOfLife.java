@@ -28,7 +28,7 @@ public class GameOfLife {
     /**
      * Represents a square on the game grid.
      */
-    class Square {
+    static class Square {
         // Position of the square on the grid
         private int x;
         private int y;
@@ -54,17 +54,41 @@ public class GameOfLife {
         }
 
         /**
-         * Changes state of Square.
+         * @return stateOfLife.
          */
-        void changeState() {
-            stateOfLife = !stateOfLife;
+        boolean getStateOfLife() {
+            return stateOfLife;
         }
 
         /**
-         * Get number of neighbours of Square.
+         * @return numberOfNeighbours.
          */
         int getNumberOfNeighbours() {
             return this.numberOfNeighbours;
+        }
+
+        /**
+         * Changes state of Square based on number of neighbours.
+         */
+        void changeState() {
+            if (this.stateOfLife)
+            {
+                if (this.numberOfNeighbours < 2)
+                {
+                    this.stateOfLife = false;
+                }
+                else if (this.numberOfNeighbours > 3)
+                {
+                    this.stateOfLife = false;
+                }
+            }
+            else
+            {
+                if (this.numberOfNeighbours == 3)
+                {
+                    this.stateOfLife = true;
+                }
+            }
         }
 
         /**
@@ -80,14 +104,23 @@ public class GameOfLife {
             final int GRID_ROWS = grid.length;
             final int GRID_COLS = grid[0].length;
 
-            // Loop through neighbours of the Square.
-            for (int i = this.y - 1; i < this.y + 1; i++)
+            // Calculate start and end positions of neighbours while avoiding edges
+            int startOfRows, startOfCols, endOfRows, endOfCols;
+
+            startOfRows = Math.max(this.y - 1, 0);
+            startOfCols = Math.max(this.x - 1, 0);
+
+            endOfRows = Math.min(this.y + 1, GRID_ROWS - 1);
+            endOfCols = Math.min(this.x + 1, GRID_COLS - 1);
+
+            // Iterate through Square's neighbours
+            for (int i = startOfRows; i <= endOfRows; i++)
             {
-                for (int j = this.x - 1; j < this.x + 1; j++)
+                for (int j = startOfCols; j <= endOfCols; j++)
                 {
-                    if (i >= 0 && i <= GRID_ROWS && j >= 0 && j <= GRID_COLS && !(i == y && j == x))
+                    if (!(i == this.y && j == this.x))
                     {
-                        if (grid[i][j].stateOfLife)
+                        if (grid[i][j].getStateOfLife())
                         {
                             this.numberOfNeighbours++;
                         }
@@ -95,5 +128,12 @@ public class GameOfLife {
                 }
             }
         }
+    }
+
+    /**
+     * @return playing grid.
+     */
+    Square[][] getGrid() {
+        return this.grid;
     }
 }
