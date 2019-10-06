@@ -4,7 +4,7 @@ package life;
  * Main game class.
  * Represents game board and performs game operations.
  */
-public class GameOfLife {
+public class GameOfLife implements Game {
     private Square[][] grid;
 
     /**
@@ -133,7 +133,35 @@ public class GameOfLife {
     /**
      * @return playing grid.
      */
-    Square[][] getGrid() {
+    public Square[][] getGrid() {
         return this.grid;
+    }
+
+    /**
+     * Find next configuration of the game based on the current configuration.
+     */
+    public void findNextConfiguration() {
+        this.countNeighbours();
+
+        for (Square[] row : this.grid)
+        {
+            for (Square square : row)
+            {
+                square.changeState();
+            }
+        }
+    }
+
+    /**
+     * Count the number of neighbours for each square of the state grid.
+     */
+    public void countNeighbours() {
+        for (Square[] row : this.grid)
+        {
+            for (Square square : row)
+            {
+                square.countSquareNeighbours();
+            }
+        }
     }
 }
