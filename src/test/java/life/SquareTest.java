@@ -3,58 +3,56 @@ package life;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;
 
 class SquareTest {
     private static GameOfLife testGame;
-
-    /**
-     * Initialize testGame.
-     */
-    @BeforeAll
-    static void initializeGame() {
-        boolean[][] testStates = {{true, false, true},
-                                  {false, true, false},
-                                  {true, false, true}};
-
-        testGame = new GameOfLife(testStates);
-    }
+    private static GameOfLife.Square[][] gameGrid;
 
     /**
      * Test operations implemented on square.
      */
     @Test
     void testSquareOperations() {
-        GameOfLife.Square[][] gameGrid = testGame.getGrid();
+        boolean[][] oldStates = {{true, false, true},
+                                 {false, true, false},
+                                 {true, false, true}};
 
-        boolean[][] correctNewStates = {{false, true, false},
+        boolean[][] newStates = {{false, true, false},
                                  {true, false, true},
                                  {false, true, false}};
 
-        int[][] correctNumberOfNeighbours = {{1, 3, 1},
-                                             {3, 4, 3},
-                                             {1, 3, 1}};
+        int[][] numberOfNeighbours = {{1, 3, 1},
+                                      {3, 4, 3},
+                                      {1, 3, 1}};
 
-        for (int i = 0; i < gameGrid.length; i++)
+        testGame = new GameOfLife(oldStates);
+        gameGrid = testGame.getGrid();
+
+        final int ROWS = gameGrid.length;
+        final int COLS = gameGrid[0].length;
+
+        // Test number of neighbours
+        for (int i = 0; i < ROWS; i++)
         {
-            for (int j = 0; j < gameGrid[0].length; j++)
+            for (int j = 0; j < COLS; j++)
             {
-                gameGrid[i][j].countSquareNeighbours();
+                gameGrid[i][j].countSquareNeighbours(testGame.getStates());
 
                 // Test number of neighbours
-                assertEquals(gameGrid[i][j].getNumberOfNeighbours(), correctNumberOfNeighbours[i][j]);
+                assertEquals(gameGrid[i][j].getNumberOfNeighbours(), numberOfNeighbours[i][j]);
             }
         }
 
-        for (int i = 0; i < gameGrid.length; i++)
+        // Test new states
+        for (int i = 0; i < ROWS; i++)
         {
-            for (int j = 0; j < gameGrid[0].length; j++)
+            for (int j = 0; j < COLS; j++)
             {
                 gameGrid[i][j].changeState();
 
                 // Test new state
-                assertEquals(gameGrid[i][j].getStateOfLife(), correctNewStates[i][j]);
+                assertEquals(gameGrid[i][j].getStateOfLife(), newStates[i][j]);
             }
         }
     }
@@ -65,5 +63,6 @@ class SquareTest {
     @AfterAll
     static void freeUsedMemory() {
         testGame = null;
+        gameGrid = null;
     }
 }
