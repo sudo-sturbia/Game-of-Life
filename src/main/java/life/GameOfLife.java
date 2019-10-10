@@ -25,8 +25,9 @@ public class GameOfLife implements Game {
         {
             for (int j = 0; j < COLS; j++)
             {
-                grid[i][j] = new Square(i, j, gridStates[i][j]);
                 statesOfSquares[i][j] = gridStates[i][j];
+
+                grid[i][j] = new Square(i, j, statesOfSquares);
             }
         }
     }
@@ -38,29 +39,29 @@ public class GameOfLife implements Game {
         // Position of the square on the grid
         private int x;
         private int y;
-
-        private boolean stateOfLife;
         private int numberOfNeighbours;
+
+        private boolean[][] stateArray;   // Reference to states array
 
         /**
          * Square constructor.
          *
          * @param row specifies Square's row.
          * @param col specifies Square's column.
-         * @param squareState specifies Square's state of life.
+         * @param stateOfSquares a reference to states array.
          */
-        Square (int row, int col, boolean squareState) {
+        Square (int row, int col, boolean[][] stateOfSquares) {
             this.x = col;
             this.y = row;
 
-            this.stateOfLife = squareState;
+            this.stateArray = stateOfSquares;
         }
 
         /**
          * @return stateOfLife.
          */
         boolean getStateOfLife() {
-            return stateOfLife;
+            return stateArray[y][x];
         }
 
         /**
@@ -74,18 +75,18 @@ public class GameOfLife implements Game {
          * Changes state of Square based on number of neighbours.
          */
         void changeState() {
-            if (this.stateOfLife)
+            if (this.stateArray[y][x])
             {
                 if (this.numberOfNeighbours < 2 || this.numberOfNeighbours > 3)
                 {
-                    this.stateOfLife = false;
+                    this.stateArray[y][x] = false;
                 }
             }
             else
             {
                 if (this.numberOfNeighbours == 3)
                 {
-                    this.stateOfLife = true;
+                    this.stateArray[y][x] = true;
                 }
             }
         }
@@ -93,9 +94,9 @@ public class GameOfLife implements Game {
         /**
          * Find number of neighbours for the square.
          */
-        void countSquareNeighbours(boolean[][] grid) {
-            final int GRID_ROWS = grid.length;
-            final int GRID_COLS = grid[0].length;
+        void countSquareNeighbours() {
+            final int GRID_ROWS = stateArray.length;
+            final int GRID_COLS = stateArray[0].length;
 
             // Reset number of neighbours to zero
             this.numberOfNeighbours = 0;
@@ -114,7 +115,7 @@ public class GameOfLife implements Game {
             {
                 for (int j = startOfCols; j <= endOfCols; j++)
                 {
-                    if (!(i == this.y && j == this.x) && grid[i][j])
+                    if (!(i == this.y && j == this.x) && stateArray[i][j])
                     {
                         this.numberOfNeighbours++;
                     }
@@ -143,15 +144,11 @@ public class GameOfLife implements Game {
     public void findNextConfiguration() {
         this.countNeighbours();
 
-        final int ROWS = this.grid.length;
-        final int COLS = this.grid[0].length;
-
-        for (int i = 0; i < ROWS; i++)
+        for (Square[] row : this.grid)
         {
-            for (int j = 0; j < COLS; j++)
+            for (Square square : row)
             {
-                this.grid[i][j].changeState();
-                this.statesOfSquares[i][j] = this.grid[i][j].getStateOfLife();
+                square.changeState();
             }
         }
     }
@@ -159,12 +156,12 @@ public class GameOfLife implements Game {
     /**
      * Count the number of neighbours for each square of the state grid.
      */
-    public void countNeighbours() {
+    private void countNeighbours() {
         for (Square[] row : this.grid)
         {
             for (Square square : row)
             {
-                square.countSquareNeighbours(this.statesOfSquares);
+                square.countSquareNeighbours();
             }
         }
     }

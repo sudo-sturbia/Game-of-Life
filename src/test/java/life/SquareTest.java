@@ -37,7 +37,7 @@ class SquareTest {
         {
             for (int j = 0; j < COLS; j++)
             {
-                gameGrid[i][j].countSquareNeighbours(testGame.getStates());
+                gameGrid[i][j].countSquareNeighbours();
 
                 // Test number of neighbours
                 assertEquals(gameGrid[i][j].getNumberOfNeighbours(), numberOfNeighbours[i][j]);
