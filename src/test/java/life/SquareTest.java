@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterAll;
 
+/**
+ * Test Square class.
+ */
 class SquareTest {
     private static GameOfLife testGame;
     private static GameOfLife.Square[][] gameGrid;
@@ -45,14 +48,13 @@ class SquareTest {
         }
 
         // Test new states
+        boolean[][] stateArray = testGame.findNextConfiguration();
         for (int i = 0; i < ROWS; i++)
         {
             for (int j = 0; j < COLS; j++)
             {
-                gameGrid[i][j].changeState();
-
                 // Test new state
-                assertEquals(gameGrid[i][j].getStateOfLife(), newStates[i][j]);
+                assertEquals(stateArray[i][j], newStates[i][j]);
             }
         }
     }

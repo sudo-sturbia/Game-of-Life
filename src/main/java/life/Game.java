@@ -7,6 +7,8 @@ package life;
 public interface Game {
     /**
      * Find next configuration of the game based on the current configuration.
+     *
+     * @return array containing new states.
      */
-    void findNextConfiguration();
+    boolean[][] findNextConfiguration();
 }

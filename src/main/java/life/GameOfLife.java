@@ -58,13 +58,6 @@ public class GameOfLife implements Game {
         }
 
         /**
-         * @return stateOfLife.
-         */
-        boolean getStateOfLife() {
-            return stateArray[y][x];
-        }
-
-        /**
          * @return numberOfNeighbours.
          */
         int getNumberOfNeighbours() {
@@ -132,16 +125,11 @@ public class GameOfLife implements Game {
     }
 
     /**
-     * @return boolean array states of squares.
-     */
-    public boolean[][] getStates() {
-        return this.statesOfSquares;
-    }
-
-    /**
      * Find next configuration of the game based on the current configuration.
+     *
+     * @return array containing new states.
      */
-    public void findNextConfiguration() {
+    public boolean[][] findNextConfiguration() {
         this.countNeighbours();
 
         for (Square[] row : this.grid)
@@ -151,6 +139,8 @@ public class GameOfLife implements Game {
                 square.changeState();
             }
         }
+
+        return this.statesOfSquares;
     }
 
     /**

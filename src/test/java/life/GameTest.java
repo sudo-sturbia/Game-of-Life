@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
+/**
+ * Test game class.
+ */
 class GameTest {
     private static GameOfLife testGame;
     private static boolean[][] testGridStates;
@@ -31,8 +34,7 @@ class GameTest {
         testGame = new GameOfLife(staticConfiguration);
 
         // Find next configuration
-        testGame.findNextConfiguration();
-        testGridStates = testGame.getStates();
+        testGridStates = testGame.findNextConfiguration();
 
         // Test states
         for (int i = 0; i < 4; i++)
@@ -66,8 +68,7 @@ class GameTest {
         testGame = new GameOfLife(firstConfiguration);
 
         // Test first configuration
-        testGame.findNextConfiguration();
-        testGridStates = testGame.getStates();
+        testGridStates = testGame.findNextConfiguration();
 
         // Test states
         for (int i = 0; i < 6; i++)
@@ -79,8 +80,7 @@ class GameTest {
         }
 
         // Test second configuration
-        testGame.findNextConfiguration();
-        testGridStates = testGame.getStates();
+        testGridStates = testGame.findNextConfiguration();
 
         // Test states
         for (int i = 0; i < 6; i++)
