@@ -1,0 +1,8 @@
+.root {
+    -fx-background-color: #dbe2ef;
+}
+
+#title-text {
+    -fx-font-size: 40px;
+    -fx-fill: #3f72af;
+}
