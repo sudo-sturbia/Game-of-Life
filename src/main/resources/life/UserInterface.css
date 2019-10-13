@@ -1,8 +1,12 @@
 .root {
-    -fx-background-color: #dbe2ef;
+    -fx-background-color: #f9f7f7;
+}
+
+#main-pane {
+    -fx-border-color: black;
 }
 
 #title-text {
     -fx-font-size: 40px;
-    -fx-fill: #3f72af;
+    -fx-fill: #112d4e;
 }
