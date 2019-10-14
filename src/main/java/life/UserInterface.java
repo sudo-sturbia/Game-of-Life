@@ -14,12 +14,15 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 /**
  * Defines UI used in the application.
  */
 public class UserInterface extends Application {
 
-    private Game game;
     private Pane[][] layoutPanes;
 
     public static void main(String[] args) {
@@ -68,8 +71,8 @@ public class UserInterface extends Application {
         ColumnConstraints colConstraint1 = new ColumnConstraints();
         ColumnConstraints colConstraint2 = new ColumnConstraints();
 
-        colConstraint1.setPercentWidth(75);
-        colConstraint2.setPercentWidth(25);
+        colConstraint1.setPercentWidth(80);
+        colConstraint2.setPercentWidth(20);
 
         mainPane.getColumnConstraints().addAll(colConstraint1, colConstraint2);
 
@@ -78,8 +81,8 @@ public class UserInterface extends Application {
         RowConstraints rowConstraint1 = new RowConstraints();
         RowConstraints rowConstraint2 = new RowConstraints();
 
-        rowConstraint1.setPercentHeight(25);
-        rowConstraint2.setPercentHeight(75);
+        rowConstraint1.setPercentHeight(20);
+        rowConstraint2.setPercentHeight(80);
 
         mainPane.getRowConstraints().addAll(rowConstraint1, rowConstraint2);
     }
@@ -144,8 +147,8 @@ public class UserInterface extends Application {
         final TextField rowField = new TextField("20");
         final TextField colField = new TextField("20");
 
-        rowField.setPrefColumnCount(5);
-        colField.setPrefColumnCount(5);
+        rowField.setPrefColumnCount(3);
+        colField.setPrefColumnCount(3);
 
         // Create a grid to layout elements
         final GridPane promptGrid = new GridPane();
@@ -312,8 +315,84 @@ public class UserInterface extends Application {
         start.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                // ..
+                UserInterface.this.playGame(mainPane, gridPanes);
             }
         });
+    }
+
+    /**
+     * Create and play a game.
+     *
+     * @param mainPane main layout pane.
+     * @param gridPanes grid of panes used to display game configurations.
+     */
+    private void playGame(GridPane mainPane, Pane[][] gridPanes) {
+        // Remove event handlers
+        for (Pane[] panes : gridPanes)
+        {
+            for (Pane pane : panes)
+            {
+                pane.setOnMouseClicked(null);
+            }
+        }
+
+        // Create a boolean array containing cell states
+        int rows = gridPanes.length;
+        int cols = gridPanes[0].length;
+
+        boolean[][] cellStates = new boolean[rows][cols];
+
+        // Set states of cells
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                // Live cell
+                if (gridPanes[i][j].getId().equals("live-cell"))
+                {
+                    cellStates[i][j] = true;
+                }
+                else if (gridPanes[i][j].getId().equals("dead-cell"))
+                {
+                    cellStates[i][j] = false;
+                }
+            }
+        }
+
+        // Create number of iterations label
+        final Label numberOfIterations = new Label("Iterations: 0");
+
+        // Replace info pane with number of iterations
+        StackPane infoPane = (StackPane) layoutPanes[1][1];
+
+        infoPane.getChildren().clear();
+        infoPane.getChildren().add(numberOfIterations);
+
+        // Create a Game object and iterate through configurations
+        final Game game = new GameOfLife(cellStates);
+
+        final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
+            @Override
+            public void run() {
+                boolean[][] nextConfiguration = game.findNextConfiguration();
+
+                // Show configuration
+                for (int i = 0, rows = nextConfiguration.length; i < rows; i++)
+                {
+                    for (int j = 0, cols = nextConfiguration[i].length; j < cols; j++)
+                    {
+                        if (nextConfiguration[i][j])
+                        {
+                            gridPanes[i][j].setId("live-cell");
+                        }
+                        else
+                        {
+                            gridPanes[i][j].setId("dead-cell");
+                        }
+                    }
+                }
+            }
+        }, 0, 1, TimeUnit.SECONDS);
     }
 }
