@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -100,7 +101,6 @@ public class UserInterface extends Application {
         title.setId("title-text");
 
         titlePane.getChildren().add(title);
-        titlePane.setPadding(new Insets(40));
 
         // Add stack pane to main layout
         layoutPanes[0][0] = titlePane;
@@ -139,7 +139,7 @@ public class UserInterface extends Application {
     private void initializeGame(GridPane mainPane) {
         // Create Labels and Text fields to prompt user for initial grid size
         final Label rowLabel = new Label("Rows: ");
-        final Label colLabel = new Label("Cols: ");
+        final Label colLabel = new Label("Columns: ");
 
         final TextField rowField = new TextField("20");
         final TextField colField = new TextField("20");
@@ -208,9 +208,10 @@ public class UserInterface extends Application {
     private void findInitialConfiguration(GridPane mainPane, int rows, int cols) {
         final StackPane sideInfo = new StackPane();
         sideInfo.setId("layout-pane");
+        sideInfo.setPadding(new Insets(20));
 
         // Create VBox to hold side info
-        final VBox vbox = new VBox(50);
+        final VBox vbox = new VBox(25);
 
         vbox.setPadding(new Insets(10));
         vbox.setAlignment(Pos.CENTER);
@@ -234,8 +235,8 @@ public class UserInterface extends Application {
         GridPane gameGrid = new GridPane();
 
         // Set grid gaps
-        gameGrid.setVgap(1);
-        gameGrid.setHgap(1);
+        gameGrid.setVgap(4);
+        gameGrid.setHgap(4);
 
         // Create column and row constraints
         double colPercentage = 100.0 / cols;
@@ -264,5 +265,55 @@ public class UserInterface extends Application {
 
         layoutPanes[1][0] = gameGrid;
         mainPane.add(gameGrid, 0, 1);
+
+        // Create an array of cells (Panes) to fill the grid and a boolean array to hold states
+        final Pane[][] gridPanes = new Pane[rows][cols];
+        boolean[][] gridStates = new boolean[rows][cols];
+
+        // Initialize Panes and insert them in grid
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                gridPanes[i][j] = new Pane();
+                gridPanes[i][j].setId("dead-cell");
+
+                gameGrid.add(gridPanes[i][j], j, i);
+            }
+        }
+
+        // Create an event handler for panes
+        EventHandler<MouseEvent> clickCell = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Pane whichPane = (Pane) event.getSource();
+
+                if (whichPane.getId().equals("dead-cell"))
+                {
+                    whichPane.setId("live-cell");
+                }
+                else if (whichPane.getId().equals("live-cell"))
+                {
+                    whichPane.setId("dead-cell");
+                }
+            }
+        };
+
+        // Assign event to grid cells
+        for (Pane[] panes : gridPanes)
+        {
+            for (Pane pane : panes)
+            {
+                pane.setOnMouseClicked(clickCell);
+            }
+        }
+
+        // Create event for start button
+        start.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                // ..
+            }
+        });
     }
 }

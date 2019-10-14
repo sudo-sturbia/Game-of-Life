@@ -16,6 +16,14 @@
     -fx-background-color: -fx-focus-color, -fx-background;
 }
 
+#dead-cell {
+    -fx-background-color: #dbe2ef;
+}
+
+#live-cell {
+    -fx-background-color: #112d4e;
+}
+
 #layout-pane {
     -fx-background-color: #dbe2ef;
 }
@@ -23,8 +31,4 @@
 #title-text {
     -fx-font-size: 40px;
     -fx-fill: #112d4e;
-}
-
-#initial-playing-grid {
-    -fx-background-color: #dbe2ef;
 }
