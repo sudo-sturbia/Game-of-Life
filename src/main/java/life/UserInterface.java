@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 public class UserInterface extends Application {
 
     private Pane[][] layoutPanes;
+    private ScheduledExecutorService scheduledExecutorService;
 
     public static void main(String[] args) {
         launch(args);
@@ -38,6 +39,8 @@ public class UserInterface extends Application {
     public void start(Stage primaryStage) {
         // Create and initialize program's main layout
         final GridPane mainPane = new GridPane();
+        scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+
         initMainLayout(mainPane);
 
         createInitialLayoutElements(mainPane);
@@ -51,6 +54,15 @@ public class UserInterface extends Application {
         primaryStage.setScene(scene);
         scene.getStylesheets().add(UserInterface.class.getResource("UserInterface.css").toExternalForm());
         primaryStage.show();
+    }
+
+    /**
+     * Clean up after program is finished.
+     * Shuts down scheduled executor that runs thee program.
+     */
+    @Override
+    public void stop() {
+        scheduledExecutorService.shutdown();
     }
 
     /**
@@ -359,6 +371,9 @@ public class UserInterface extends Application {
             }
         }
 
+        // Create a Game object to find configurations
+        final Game game = new GameOfLife(cellStates);
+
         // Create number of iterations label
         final Label numberOfIterations = new Label("Iterations: 0");
 
@@ -368,10 +383,7 @@ public class UserInterface extends Application {
         infoPane.getChildren().clear();
         infoPane.getChildren().add(numberOfIterations);
 
-        // Create a Game object and iterate through configurations
-        final Game game = new GameOfLife(cellStates);
-
-        final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        // Use executor to display configurations with a fixed delay
         scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
             @Override
             public void run() {
@@ -393,6 +405,6 @@ public class UserInterface extends Application {
                     }
                 }
             }
-        }, 0, 1, TimeUnit.SECONDS);
+        }, 0, 400, TimeUnit.MILLISECONDS);
     }
 }
