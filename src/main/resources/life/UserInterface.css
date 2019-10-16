@@ -1,34 +1,44 @@
 .root {
-    -fx-background-color: #f9f7f7;
+    -fx-font-family: "Righteous";
+    -fx-background-color: #c9d6df;
 }
 
 .label {
-    -fx-text-fill: #112d4e;
+    -fx-font-size: 14px;
+    -fx-text-fill: #1e2022;
 }
 
 .text-field {
-    -fx-background-color: -fx-text-box-border, -fx-background;
+    -fx-font-size: 14px;
+    -fx-background-color: -fx-text-box-border, #f0f5f9;
     -fx-background-insets: 0, 0 0 1 0;
     -fx-background-radius: 0;
 }
 
 .text-field:focused {
-    -fx-background-color: -fx-focus-color, -fx-background;
+    -fx-background-color: -fx-focus-color, #f0f5f9;
+}
+
+.button {
+    -fx-background-color: #c9d6df;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-background-radius: 3;
 }
 
 #dead-cell {
-    -fx-background-color: #dbe2ef;
+    -fx-background-color: #f0f5f9;
 }
 
 #live-cell {
-    -fx-background-color: #112d4e;
+    -fx-background-color: #1e2022;
 }
 
 #layout-pane {
-    -fx-background-color: #dbe2ef;
+    -fx-background-color: #f0f5f9;
+    -fx-background-radius: 5;
 }
 
 #title-text {
     -fx-font-size: 40px;
-    -fx-fill: #112d4e;
+    -fx-fill: #1e2022;
 }

@@ -1,6 +1,8 @@
 package life;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -11,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -37,6 +40,9 @@ public class UserInterface extends Application {
      */
     @Override
     public void start(Stage primaryStage) {
+        // Load font
+        Font.loadFont(UserInterface.class.getResource("Righteous-Regular.ttf").toExternalForm(), 10);
+
         // Create and initialize program's main layout
         final GridPane mainPane = new GridPane();
         scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
@@ -283,7 +289,6 @@ public class UserInterface extends Application {
 
         // Create an array of cells (Panes) to fill the grid and a boolean array to hold states
         final Pane[][] gridPanes = new Pane[rows][cols];
-        boolean[][] gridStates = new boolean[rows][cols];
 
         // Initialize Panes and insert them in grid
         for (int i = 0; i < rows; i++)
@@ -375,13 +380,24 @@ public class UserInterface extends Application {
         final Game game = new GameOfLife(cellStates);
 
         // Create number of iterations label
-        final Label numberOfIterations = new Label("Iterations: 0");
+        final Label iterationsName = new Label("Iteration: ");
+        final Label iterationsNumber = new Label();
+
+        SimpleIntegerProperty integerProperty = new SimpleIntegerProperty(0);
+        iterationsNumber.textProperty().bind(integerProperty.asString());
 
         // Replace info pane with number of iterations
-        StackPane infoPane = (StackPane) layoutPanes[1][1];
+        GridPane infoGrid = new GridPane();
+        infoGrid.setId("layout-pane");
+        infoGrid.setAlignment(Pos.CENTER);
 
-        infoPane.getChildren().clear();
-        infoPane.getChildren().add(numberOfIterations);
+        infoGrid.add(iterationsName, 0, 0);
+        infoGrid.add(iterationsNumber, 1, 0);
+
+        mainPane.getChildren().remove(layoutPanes[1][1]);
+
+        layoutPanes[1][1] = infoGrid;
+        mainPane.add(infoGrid, 1, 1);
 
         // Use executor to display configurations with a fixed delay
         scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
@@ -404,6 +420,13 @@ public class UserInterface extends Application {
                         }
                     }
                 }
+
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        integerProperty.set(integerProperty.getValue() + 1);
+                    }
+                });
             }
         }, 0, 400, TimeUnit.MILLISECONDS);
     }
