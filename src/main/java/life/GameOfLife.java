@@ -1,5 +1,7 @@
 package life;
 
+import java.util.Arrays;
+
 /**
  * Main game class.
  * Represents game board and performs game operations.
@@ -7,6 +9,9 @@ package life;
 public class GameOfLife implements Game {
     private  Square[][] grid;
     private boolean[][] statesOfSquares;     // An array to keep track of Squares' states
+
+    private boolean isStaticConfig;
+    private boolean[][] previousStatesOfSquares;
 
     /**
      * Game constructor
@@ -20,6 +25,7 @@ public class GameOfLife implements Game {
 
         grid = new Square[ROWS][COLS];
         statesOfSquares = new boolean[ROWS][COLS];
+        previousStatesOfSquares = new boolean[ROWS][COLS];
 
         for (int i = 0; i < ROWS; i ++)
         {
@@ -125,19 +131,38 @@ public class GameOfLife implements Game {
     }
 
     /**
+     * @return true if configuration doesn't change, false otherwise
+     */
+    public boolean isStatic() {
+        return this.isStaticConfig;
+    }
+
+    /**
      * Find next configuration of the game based on the current configuration.
      *
      * @return array containing new states.
      */
     public boolean[][] findNextConfiguration() {
-        this.countNeighbours();
+        // Save previous configuration
+        for (int i = 0, rows = this.statesOfSquares.length; i < rows; i++)
+        {
+            this.previousStatesOfSquares[i] = Arrays.copyOf(this.statesOfSquares[i], this.statesOfSquares[i].length);
+        }
 
+        // Find new configuration
+        this.countNeighbours();
         for (Square[] row : this.grid)
         {
             for (Square square : row)
             {
                 square.changeState();
             }
+        }
+
+        // Compare current and previous configurations
+        if (Arrays.deepEquals(this.statesOfSquares, this.previousStatesOfSquares))
+        {
+            this.isStaticConfig = true;
         }
 
         return this.statesOfSquares;

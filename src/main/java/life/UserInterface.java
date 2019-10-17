@@ -421,12 +421,20 @@ public class UserInterface extends Application {
                     }
                 }
 
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        integerProperty.set(integerProperty.getValue() + 1);
-                    }
-                });
+                // Check if board is static
+                if (game.isStatic())
+                {
+                    scheduledExecutorService.shutdown();
+                }
+                else
+                {
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            integerProperty.set(integerProperty.getValue() + 1);
+                        }
+                    });
+                }
             }
         }, 0, 400, TimeUnit.MILLISECONDS);
     }
