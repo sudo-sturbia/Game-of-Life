@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.0.8'
+    id 'com.github.johnrengelman.shadow' version '5.1.0'
 }
 
 version '1.0'
@@ -17,13 +18,23 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.2'
 }
 
+application {
+    mainClassName = 'life.Main'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'life.Main'
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
 javafx {
     version = "11.0.2"
     modules = [ 'javafx.controls', 'javafx.graphics' ]
-}
-
-application {
-    mainClassName = 'life.Main'
 }
 
 test {
