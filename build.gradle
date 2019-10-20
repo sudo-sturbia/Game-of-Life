@@ -23,7 +23,7 @@ javafx {
 }
 
 application {
-    mainClassName = 'life.UserInterface'
+    mainClassName = 'life.Main'
 }
 
 test {
