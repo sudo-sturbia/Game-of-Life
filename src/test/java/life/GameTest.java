@@ -1,93 +1,164 @@
 package life;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
+
+import java.util.Random;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test game class.
  */
 class GameTest {
-    private static GameOfLife testGame;
-    private static boolean[][] testGridStates;
-
-    /**
-     * Free object memory before each method.
-     */
-    @BeforeEach
-    void freeMemory() {
-        testGame = null;
-        testGridStates = null;
-    }
-
     /**
      * Test static patterns.
      */
     @Test
-    void testStaticPattern() {
-        boolean[][] staticConfiguration = {{false, false, false, false},
-                                           {false, true, true, false},
-                                           {false, true, true, false},
-                                           {false, false, false, false}};
+    void testStaticPatterns() {
+        Game game;
 
-        testGame = new GameOfLife(staticConfiguration);
+        boolean[][] firstConfig = {
+            {false, false, false, false},
+            {false, true,  true,  false},
+            {false, true,  true,  false},
+            {false, false, false, false}
+        };
 
-        // Find next configuration
-        testGridStates = testGame.findNextConfiguration();
-
-        // Test states
-        for (int i = 0; i < 4; i++)
+        game = new GameOfLife(firstConfig);
+        for (int i = 0; i < 5; i++)
         {
-            for (int j = 0; j < 4; j++)
+            assertStates(firstConfig, game.nextConfig());
+        }
+
+        boolean[][] secondConfig = {
+            {false, false, false, false, false},
+            {false, true,  true,  false, false},
+            {false, true,  false, true,  false},
+            {false, false, true,  false, false},
+            {false, false, false, false, false}
+        };
+
+        game = new GameOfLife(secondConfig);
+        for (int i = 0; i < 10; i++)
+        {
+            assertStates(secondConfig, game.nextConfig());
+        }
+    }
+
+    @Test
+    void testIsStatic() {
+        boolean[][] config = {
+            {false, false, false, false},
+            {false, true,  true,  false},
+            {false, true,  true,  false},
+            {false, false, false, false}
+        };
+
+        Game game = new GameOfLife(config);
+
+        for (int i = 0; i < 10; i++)
+        {
+            game.nextConfig();
+            assertTrue(game.isStatic(), "isStatic produces false when true is expected.");
+        }
+    }
+
+    /**
+     * Test oscillating patterns.
+     */
+    @Test
+    void testOscillatingPattern() {
+        Game game;
+        Random random = new Random();
+
+        boolean[][][] firstConfigs = {
             {
-                assertEquals(testGridStates[i][j], staticConfiguration[i][j]);
+                {false, false, false, false, false, false},
+                {false, false, false, false, false, false},
+                {false, false, true,  true,  true,  false},
+                {false, true,  true,  true,  false, false},
+                {false, false, false, false, false, false},
+                {false, false, false, false, false, false}
+            },
+            {
+                {false, false, false, false, false, false},
+                {false, false, false, true,  false, false},
+                {false, true,  false, false, true,  false},
+                {false, true,  false, false, true,  false},
+                {false, false, true,  false, false, false},
+                {false, false, false, false, false, false}
+            }
+        };
+
+        game = new GameOfLife(firstConfigs[0]);
+        for (int i = 0, n = random.nextInt(20); i < n; i++)
+        {
+            if (i % 2 == 0)
+            {
+                assertStates(firstConfigs[1], game.nextConfig());
+            }
+            else
+            {
+                assertStates(firstConfigs[0], game.nextConfig());
+            }
+        }
+
+        boolean[][][] secondConfigs = {
+            {
+                {false, false, false, false, false, false},
+                {false, true,  true,  false, false, false},
+                {false, true,  true,  false, false, false},
+                {false, false, false, true,  true,  false},
+                {false, false, false, true,  true,  false},
+                {false, false, false, false, false, false}
+            },
+            {
+                {false, false, false, false, false, false},
+                {false, true,  true,  false, false, false},
+                {false, true,  false, false, false, false},
+                {false, false, false, false, true,  false},
+                {false, false, false, true,  true,  false},
+                {false, false, false, false, false, false}
+            }
+        };
+
+        game = new GameOfLife(secondConfigs[0]);
+        for (int i = 0, n = random.nextInt(20); i < n; i++)
+        {
+            if (i % 2 == 0)
+            {
+                assertStates(secondConfigs[1], game.nextConfig());
+            }
+            else
+            {
+                assertStates(secondConfigs[0], game.nextConfig());
             }
         }
     }
 
     /**
-     * Test an oscillating pattern.
+     * Asserts that calculated states are not null and are the same
+     * as expected states. States are represented using boolean 2d
+     * arrays.
+     *
+     * @param expected Expected states.
+     * @param calculated Calculated states.
      */
-    @Test
-    void testOscillatingPattern() {
-        boolean[][] firstConfiguration = {{false, false, false, false, false, false},
-                                          {false, false, false, false, false, false},
-                                          {false, false, true, true, true, false},
-                                          {false, true, true, true, false, false},
-                                          {false, false, false, false, false, false},
-                                          {false, false, false, false, false, false}};
+    void assertStates(boolean[][] expected, boolean[][] calculated) {
+        assertNotNull(calculated, "Calculated states array is null.");
 
-        boolean[][] secondConfiguration = {{false, false, false, false, false, false},
-                                           {false, false, false, true, false, false},
-                                           {false, true, false, false, true, false},
-                                           {false, true, false, false, true, false},
-                                           {false, false, true, false, false, false},
-                                           {false, false, false, false, false, false}};
+        assertEquals(calculated.length, expected.length,
+                "Calculated states array has incorrect number of rows.");
 
-        testGame = new GameOfLife(firstConfiguration);
-
-        // Test first configuration
-        testGridStates = testGame.findNextConfiguration();
-
-        // Test states
-        for (int i = 0; i < 6; i++)
+        for (int i = 0, rows = expected.length; i < rows; i++)
         {
-            for (int j = 0; j < 6; j++)
-            {
-                assertEquals(secondConfiguration[i][j], testGridStates[i][j]);
-            }
-        }
+            assertEquals(calculated[i].length, expected[i].length,
+                    "Sub-array " + i + " of calculated states has incorrect length.");
 
-        // Test second configuration
-        testGridStates = testGame.findNextConfiguration();
-
-        // Test states
-        for (int i = 0; i < 6; i++)
-        {
-            for (int j = 0; j < 6; j++)
+            for (int j = 0, cols = expected[i].length; j < cols; j++)
             {
-                assertEquals(firstConfiguration[i][j], testGridStates[i][j]);
+                assertEquals(calculated[i][j], expected[i][j],
+                        "Calculated value at " + i + " , " + j + " is incorrect.");
             }
         }
     }
