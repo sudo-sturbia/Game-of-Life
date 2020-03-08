@@ -1,20 +1,20 @@
 package life;
 
 /**
- * Main game interface.
- * Used to specify methods to be implemented by the game.
+ * Game represents a game of life, and specifies methods to
+ * be implemented.
  */
 public interface Game {
-
     /**
-     * @return true if configuration doesn't change, false otherwise
+     * @return true if board didn't change during previous
+     * step, returns false otherwise
      */
     boolean isStatic();
 
     /**
-     * Find next configuration of the game based on the current configuration.
+     * Find new game configuration based on the current states.
      *
-     * @return array containing new states.
+     * @return a boolean array containing new states.
      */
-    boolean[][] findNextConfiguration();
+    boolean[][] nextConfig();
 }
