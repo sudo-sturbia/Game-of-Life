@@ -403,7 +403,7 @@ public class UserInterface extends Application {
         scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
             @Override
             public void run() {
-                boolean[][] nextConfiguration = game.findNextConfiguration();
+                boolean[][] nextConfiguration = game.nextConfig();
 
                 // Show configuration
                 for (int i = 0, rows = nextConfiguration.length; i < rows; i++)
