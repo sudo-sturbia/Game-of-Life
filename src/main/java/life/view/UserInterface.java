@@ -1,4 +1,4 @@
-package life;
+package life.view;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -16,6 +16,8 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import life.model.Game;
+import life.model.GameOfLife;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;

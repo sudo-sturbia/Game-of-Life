@@ -1,4 +1,4 @@
-package life;
+package life.model;
 
 /**
  * GameSquare implements Square interface to be used by

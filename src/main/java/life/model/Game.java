@@ -1,4 +1,4 @@
-package life;
+package life.model;
 
 /**
  * Game represents a game of life, and specifies methods to

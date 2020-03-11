@@ -1,4 +1,4 @@
-package life;
+package life.model;
 
 import java.util.Arrays;
 

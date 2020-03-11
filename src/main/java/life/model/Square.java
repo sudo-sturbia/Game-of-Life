@@ -1,4 +1,4 @@
-package life;
+package life.model;
 
 /**
  * Represents a square on the game grid.
