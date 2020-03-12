@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+
+<!-- Main application grid. -->
+<GridPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="life.controller.Controller"
+          prefHeight="750" prefWidth="750"
+
+          id="main-pane"
+          hgap="10" vgap="10">
+
+    <padding><Insets topRightBottomLeft="20"/></padding>
+
+    <!-- Column and row constraints. -->
+    <columnConstraints>
+        <ColumnConstraints percentWidth="80"/>
+        <ColumnConstraints percentWidth="20"/>
+    </columnConstraints>
+
+    <rowConstraints>
+        <RowConstraints percentHeight="20"/>
+        <RowConstraints percentHeight="80"/>
+    </rowConstraints>
+
+    <!-- Main layout panes. -->
+    <!-- Title pane. -->
+    <StackPane id="layout-pane"
+               GridPane.rowIndex="0"
+               GridPane.columnIndex="0">
+        <Text id="title-text">Game of Life</Text>
+    </StackPane>
+
+    <!-- Grid used to prompt user for column and row sizes. -->
+    <GridPane fx:id="promptGrid" id="layout-pane"
+              hgap="5" vgap="5"
+              alignment="CENTER"
+              GridPane.rowIndex="0"
+              GridPane.columnIndex="1">
+
+        <!-- Rows' prompt. -->
+        <Label GridPane.rowIndex="0"
+               GridPane.columnIndex="0">
+            Rows:
+        </Label>
+
+        <TextField fx:id="rowField"
+                   prefColumnCount="3"
+                   onAction="#promptHandler"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="1">
+            20
+        </TextField>
+
+        <!-- Columns' prompt. -->
+        <Label GridPane.rowIndex="1"
+               GridPane.columnIndex="0">
+            Columns:
+        </Label>
+
+        <TextField fx:id="colField"
+                   prefColumnCount="3"
+                   onAction="#promptHandler"
+                   GridPane.rowIndex="1"
+                   GridPane.columnIndex="1">
+            20
+        </TextField>
+
+    </GridPane>
+
+    <!-- Game grid. -->
+    <GridPane fx:id="gameGrid" id="layout-pane"
+              disable="true"
+              vgap="4" hgap="4"
+              GridPane.rowIndex="1"
+              GridPane.columnIndex="0">
+
+    </GridPane>
+
+    <!-- Side information pane. Disabled until prompt is finished. -->
+    <StackPane fx:id="sideInfo" id="layout-pane"
+               disable="true"
+               GridPane.rowIndex="1"
+               GridPane.columnIndex="1">
+
+        <padding><Insets topRightBottomLeft="20"/></padding>
+
+        <!-- VBox to hold side info. -->
+        <VBox fx:id="infoBox"
+              spacing="25"
+              alignment="CENTER">
+
+            <padding><Insets topRightBottomLeft="10"/></padding>
+
+            <!-- Info label and start button. -->
+            <Label wrapText="true">
+                Click a cell to change its state.
+            </Label>
+
+            <Button fx:id="start">
+                start
+            </Button>
+        </VBox>
+    </StackPane>
+
+</GridPane>
+

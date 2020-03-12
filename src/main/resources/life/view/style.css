@@ -38,6 +38,11 @@
     -fx-background-radius: 5;
 }
 
+#title-pane {
+    -fx-background-color: #f0f5f9;
+    -fx-background-radius: 5;
+}
+
 #title-text {
     -fx-font-size: 40px;
     -fx-fill: #1e2022;
