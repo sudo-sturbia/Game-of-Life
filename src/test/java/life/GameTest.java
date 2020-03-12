@@ -1,5 +1,7 @@
 package life;
 
+import life.model.Game;
+import life.model.GameOfLife;
 import org.junit.jupiter.api.Test;
 
 import java.util.Random;
