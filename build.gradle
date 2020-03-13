@@ -5,31 +5,25 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '5.1.0'
 }
 
-version '1.0'
-sourceCompatibility = 11.0
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+version '2.0'
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
-    // Use JUnit5 for testing
+    // Use JUnit5, JUnit jupiter testing framework
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.2'
 }
 
 application {
     mainClassName = 'life.view.View'
-}
-
-jar {
-    manifest {
-        attributes 'Main-Class': 'life.Main'
-    }
-
-    from {
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-    }
 }
 
 javafx {
@@ -41,5 +35,15 @@ test {
     useJUnitPlatform()
     testLogging {
         events "passed", "skipped", "failed"
+    }
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'life.view.View'
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
